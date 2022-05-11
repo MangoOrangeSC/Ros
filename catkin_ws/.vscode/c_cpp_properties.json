@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/casicapollo/Documents/catkin_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/casicapollo/Documents/catkin_ws/src/learning_parameter/include/**",
+        "/home/casicapollo/Documents/catkin_ws/src/learning_service/include/**",
+        "/home/casicapollo/Documents/catkin_ws/src/learning_tf/include/**",
+        "/home/casicapollo/Documents/catkin_ws/src/learning_topic/include/**",
+        "/home/casicapollo/Documents/catkin_ws/src/test_pkg/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}

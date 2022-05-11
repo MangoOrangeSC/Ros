@@ -941,10 +941,7 @@ rosrun learning_tf turtle_tf_listener
 
 launch文件：通过***XML***文件实现多节点的配置和启动（可自动启动ROS MASTER）
 
-* 2.luanch文件语法
-
-
-
+* 2.launch文件语法
 
 
 ```
@@ -959,17 +956,18 @@ launch文件：通过***XML***文件实现多节点的配置和启动（可自�
   * <node>
     启动节点
 	<node pkg="package-name" type="executable-name" name="node-name"/>
+    
     * pkg：节点所在的功能包的名称     //rosrun后面的第一个参数
     * type：节点的可执行文件的名称    //rosrun后面的第二个参数
-    * name：节点运行时的名称             //节点运行起来后ROS系统中的节点名，与程序中init中的名字相同，该方式启动，name会取代掉init中的命名
-    * out、respawn、required、ns、args
-
+    * name：节点运行时的名称             //节点运行起来后ROS系统中的节点名，与程序中init中的名字相同，该方式启动，name会取代掉init中的命名。例如上面的例子中，虽然launch文件中启动了两个完全相同的节点turtlesim_node，但是将他们命名为不同的名字sim1与sim2
+    * output、respawn、required、ns（命名空间）、args
+    
   * <param>/<rosparam>
-    设置ROS系统运行中的参数，存储在参数服务器中
+    设置ROS系统运行中的参数，存储**一个参数**在参数服务器中
     <param name="output_frame" value="odom"/>
       * name：参数名
       * value：参数值
-    加载参数文件中的多个参数：
+    加载**参数文件**中的**多个**参数：
     <rosparam file="params.yaml" command="load" ns="params"/>
 
   * <arg>
@@ -1029,7 +1027,7 @@ touch turtlesim_parameter_config.launch
         <param name="turtle_name1" value="Tome"/>
         <param name="turtle_name2" value="Jerry"/>
     
-        <rosparam file="$(find learning_launch)/config/param.yaml" command="load"/>//加载参数文件
+        <rosparam file="$(find learning_launch)/config/param.yaml" command="load"/>//加载参数文件;find learning_launch搜索功能包
     </node>
     
     <node pkg="turtlesim" type="turtle_teleop_key" name="turtle_teleop_key" output="screen"/>
