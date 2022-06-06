@@ -62,6 +62,7 @@ rosnode
 rostopic
 * list
 * pub -r 10（频率）  /话题名 /消息数据 /具体数据
+* info  可以看出发布者与接收者！！！！！！！！！！
 
 rosmsg
 * show
@@ -528,8 +529,7 @@ int main(int argc,char** argv)
 }
 
 ```
-ros::spinOnce()与ros::spin()：
-ROS消息回调处理函数。它俩通常会出现在ROS的主循环中，程序需要不断调用ros::spin() 或 ros::spinOnce()，两者区别在于前者调用后不会再返回，也就是你的主程序到这儿就不往下执行了，而后者在调用后还可以继续执行之后的程序。
+
 
 2. 编译
 
@@ -1103,4 +1103,152 @@ rosrun rviz rviz
 roslaunch gazebo_ros
 
 
-#15 
+# 15 ros::spin()和ros::spinOnce()
+
+
+
+ros::spinOnce()与ros::spin()：
+ROS消息回调处理函数。它俩通常会出现在ROS的主循环中，程序需要不断调用ros::spin() 或 ros::spinOnce()，两者区别在于前者调用后不会再返回，也就是你的主程序到这儿就不往下执行了，而后者在调用后还可以继续执行之后的程序。
+
+
+
+## ros::spin()
+
+这句话的意思是循环且[监听](https://so.csdn.net/so/search?q=监听&spm=1001.2101.3001.7020)反馈函数（callback）。循环就是指程序运行到这里，就会一直在这里循环了。监听反馈函数的意思是，如果这个节点有callback函数，那写一句ros::spin()在这里，就可以在有对应消息到来的时候，运行callback函数里面的内容。 
+就目前而言，以我愚见，我觉得写这句话适用于写在程序的末尾（因为写在这句话后面的代码不会被执行），适用于订阅节点，且订阅速度没有限制的情况。
+
+## ros::spinOnce()
+
+这句话的意思是监听反馈函数（callback）。只能监听反馈，不能循环。所以当你需要监听一下的时候，就调用一下这个函数。 
+这个函数比较灵活，尤其是我想控制接收速度的时候。配合ros::ok()效果极佳。 
+
+下面的例子，控制10HZ，运行callback函数
+
+```
+ros::Rate loop_rate(10);
+while(ros::ok())
+{
+	ros::spinOnce();
+	loop_rate.sleep();
+}
+```
+
+如果只有
+
+```
+while(ros::ok())
+{
+	ros::spinOnce();
+}
+```
+
+此时效果同ros::spin()
+
+- 注意：这两个函数只和接收回调函数（callback）有关，和发布并没有关系。如果想循环发布，只能循环写publish()。
+
+
+
+例子
+
+> spin.cc
+
+```
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <geometry_msgs/Twist.h>
+
+using namespace std;
+
+void print()
+{
+    cout<<"in function" <<endl;
+}
+
+void chatterCallback(geometry_msgs::Twist vel_msg)
+{
+    ROS_INFO("publish velocity command [%0.2f m/s, %0.2f rad/s]",
+             vel_msg.linear.x,vel_msg.angular.z);
+}
+
+int main(int argc, char **argv)
+{
+    ros::init(argc,argv,"listener");
+    ros::NodeHandle n;
+
+    ros::Subscriber sub=n.subscribe("/turtle1/cmd_vel",1000,chatterCallback);
+
+    ros::Rate loop_rate(10);
+    while (ros::ok())
+    {
+        print();
+
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
+    
+    return 0;
+}
+```
+
+输出
+
+```
+in function
+publish velocity command
+in function
+publish velocity command
+in function
+publish velocity command
+......
+```
+
+> spin1.cc
+
+```
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <geometry_msgs/Twist.h>
+
+using namespace std;
+
+void print()
+{
+    cout<<"in function" <<endl;
+}
+
+void chatterCallback(geometry_msgs::Twist vel_msg)
+{
+    ROS_INFO("publish velocity command [%0.2f m/s, %0.2f rad/s]",
+             vel_msg.linear.x,vel_msg.angular.z);
+}
+
+int main(int argc, char **argv)
+{
+    ros::init(argc,argv,"listener");
+    ros::NodeHandle n;
+
+    ros::Subscriber sub=n.subscribe("/turtle1/cmd_vel",1000,chatterCallback);
+
+
+
+    print();
+
+    ros::spin();
+
+
+    
+    return 0;
+}
+```
+
+输出
+
+```
+in function
+publish velocity command
+publish velocity command
+publish velocity command
+publish velocity command
+.....
+```
+

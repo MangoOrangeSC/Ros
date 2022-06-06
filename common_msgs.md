@@ -50,6 +50,8 @@ geometry_msgs/Point point
 
 
 ### geometry_msgs/Polygon Message
+假定第一个点和最后一个点连接的多边形的一种说明
+
 File: geometry_msgs/Polygon.msg
 Raw Message Definition
 #A specification of a polygon where the first and last points are assumed to be connected
@@ -73,6 +75,9 @@ geometry_msgs/Polygon polygon
 
 
 ### geometry_msgs/Pose Message
+
+位置position+姿态orientation
+
 File: geometry_msgs/Pose.msg
 Raw Message Definition
 #A representation of pose in free space, composed of position and orientation. 
