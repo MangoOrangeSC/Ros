@@ -63,6 +63,7 @@ rostopic
 * list
 * pub -r 10（频率）  /话题名 /消息数据 /具体数据
 * info  可以看出发布者与接收者！！！！！！！！！！
+* echo 可以看出该topic上的数据
 
 rosmsg
 * show
