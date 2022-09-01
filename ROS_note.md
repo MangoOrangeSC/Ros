@@ -677,10 +677,15 @@ catkin_make
 # 10参数的使用与编程方法
 Parameter Server保存参数
 
-catkin_ws/src
-catkin_create_pkg learning_parameter roscpp rospy std_srvs
+参数服务器维护的是一个**字典**，里面存储的是**key、value**，每一个key对应一个value。
 
-* rosparam命令
+```
+cd catkin_ws/src
+catkin_create_pkg learning_parameter roscpp rospy std_srvs
+```
+
+
+* rosparam命令行指令
   * rosparam list
   * rosparam get param_key
   显示参数值
@@ -698,7 +703,7 @@ catkin_create_pkg learning_parameter roscpp rospy std_srvs
   * rosparam delete param_key
   删除参数
 
-* 如果参数比较多，一般会用**YAML参数文件**
+* 如果参数比较多，一般会用**YAML参数文件**，即launch文件
 
 * 程序修改参数
     * 源码
@@ -938,11 +943,11 @@ rosrun learning_tf turtle_tf_listener
 
 
 # 13 launch启动文件的使用方法
-* 1.launch文件
+## 1.launch文件
 
 launch文件：通过***XML***文件实现多节点的配置和启动（可自动启动ROS MASTER）
 
-* 2.launch文件语法
+## 2.launch文件语法
 
 
 ```
@@ -995,14 +1000,18 @@ launch文件：通过***XML***文件实现多节点的配置和启动（可自�
 
 
 
-* 3. 编程实例
+## 3. 编程实例
+
+cd到路径中，并创建pkg
+```
 /catkin_ws/src
 catkin_create_pkg learning_launch
-
+```
 /catkin_ws/src/learning_launch中创建launch文件夹
 
 /catkin_ws/src/learning_launch/launch中
-touch simple.launch
+
+3.1 touch simple.launch
 
 
 ```
@@ -1013,12 +1022,14 @@ touch simple.launch
 
 ```
 
+运行
+```
 catkin_make
 roslaunch learning_launch simple.launch
+```
 
+3.2 touch turtlesim_parameter_config.launch
 
-
-touch turtlesim_parameter_config.launch
 ```
 <launch>
 
@@ -1039,6 +1050,7 @@ touch turtlesim_parameter_config.launch
 
 /catkin_ws/src/learning_launch下创建config文件
 /catkin_ws/src/learning_launch/config
+
 touch param.yaml
 
 ```
@@ -1053,7 +1065,14 @@ yaml文件中，例如A: 123，：后必须跟一个***空格***
 yml文件中，键值对是以":"作为分隔符，而值经常会包含冒号，比如服务器地址。在yaml解析器解析过程中，如果不在键值对中加特殊符号，还真是难以根据键解析出值来。
 
 
-touch start_tf_demo_c++.launch
+
+![image1](pic/pic1.png)
+
+![image1](pic/pic2.png)
+
+
+
+3.3 touch start_tf_demo_c++.launch
 ```
 <launch>
 
@@ -1070,7 +1089,7 @@ touch start_tf_demo_c++.launch
 ```
 
 
-touch turtlesim_remap.launch
+3.4 touch turtlesim_remap.launch
 ```
 <launch>
 
@@ -1251,5 +1270,137 @@ publish velocity command
 publish velocity command
 publish velocity command
 .....
+```
+
+
+
+# 16 参数、launch文件、yaml文件
+
+
+
+## yaml文件
+
+https://www.runoob.com/w3cnote/yaml-intro.html
+
+### 基本语法
+
+- 大小写敏感
+- 使用缩进表示层级关系
+- 缩进不允许使用tab，只允许空格
+- 缩进的空格数不重要，只要相同层级的元素左对齐即可
+- '#'表示注释
+
+### 数据类型
+
+YAML 支持以下几种数据类型：
+
+- 对象：键值对的集合，又称为映射（mapping）/ 哈希（hashes） / 字典（dictionary）
+- 数组：一组按次序排列的值，又称为序列（sequence） / 列表（list）
+- 纯量（scalars）：单个的、不可再分的值
+
+
+
+### YAML 对象
+
+对象键值对使用冒号结构表示 **key: value**，冒号后面要加一个空格。
+
+也可以使用 **key:{key1: value1, key2: value2, ...}**。
+
+还可以使用缩进表示层级关系；
+
+```
+key: 
+    child-key: value
+    child-key2: value2
+```
+
+较为复杂的对象格式，可以使用问号加一个空格代表一个复杂的 key，配合一个冒号加一个空格代表一个 value：
+
+```
+?  
+    - complexkey1
+    - complexkey2
+:
+    - complexvalue1
+    - complexvalue2
+```
+
+意思即对象的属性是一个数组 [complexkey1,complexkey2]，对应的值也是一个数组 [complexvalue1,complexvalue2]
+
+### YAML 数组
+
+以 - 开头的行表示构成一个数组：
+
+```
+- A
+- B
+- C
+```
+
+YAML 支持多维数组，可以使用行内表示：
+
+```
+key: [value1, value2, ...]
+```
+
+数据结构的子成员是一个数组，则可以在该项下面缩进一个空格。
+
+```
+-
+ - A
+ - B
+ - C
+```
+
+一个相对复杂的例子：
+
+```
+companies:
+    -
+        id: 1
+        name: company1
+        price: 200W
+    -
+        id: 2
+        name: company2
+        price: 500W
+```
+
+意思是 companies 属性是一个数组，每一个数组元素又是由 id、name、price 三个属性构成。
+
+数组也可以使用流式(flow)的方式表示：
+
+```
+companies: [{id: 1,name: company1,price: 200W},{id: 2,name: company2,price: 500W}]
+```
+
+### 复合结构
+
+数组和对象可以构成复合结构，例：
+
+```
+languages:
+  - Ruby
+  - Perl
+  - Python 
+websites:
+  YAML: yaml.org 
+  Ruby: ruby-lang.org 
+  Python: python.org 
+  Perl: use.perl.org
+```
+
+转换为 json 为：
+
+```
+{ 
+  languages: [ 'Ruby', 'Perl', 'Python'],
+  websites: {
+    YAML: 'yaml.org',
+    Ruby: 'ruby-lang.org',
+    Python: 'python.org',
+    Perl: 'use.perl.org' 
+  } 
+}
 ```
 
