@@ -1,4 +1,6 @@
 #include <ros/ros.h>
+#include <string>
+#include <iostream>
 
 int main(int argc, char **argv)
 {
@@ -32,11 +34,26 @@ int main(int argc, char **argv)
 		ROS_WARN("Didn't retrieve param3");
 
 
+
     int para1, para2;
     ros::param::get("A", para1);
     ros::param::get("group/C", para2);
     ROS_INFO("Get para1 = %d", para1);
     ROS_INFO("Get para2 = %d", para2);
+
+    // get数组参数的方法
+    XmlRpc::XmlRpcValue arryParams;
+    ros::param::get("arry", arryParams);
+    for (size_t i = 0; i < arryParams.size(); i++)
+    {
+        /* code */
+        std::string name = arryParams[i]["name"];
+        int id =arryParams[i]["id"];
+        ROS_INFO("Get name = %s", name);
+        std::cout<< "Get name = " << name<<std::endl;
+        ROS_INFO("Get id = %d", id);        
+    }
+    
 
 /*
     //Set Param的两种方法

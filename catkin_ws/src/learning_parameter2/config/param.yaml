@@ -4,3 +4,11 @@ B: "hello"
 group:
   C: 456
   D: "hello"
+
+arry:
+  -
+    id: 1
+    name: com1
+  -
+    id: 2
+    name: com2
