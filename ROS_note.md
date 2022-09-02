@@ -1556,7 +1556,6 @@ int main(int argc, char **argv)
 		ROS_WARN("Didn't retrieve param3");
 
 
-
     int para1, para2;
     ros::param::get("A", para1);
     ros::param::get("group/C", para2);
