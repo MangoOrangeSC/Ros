@@ -49,7 +49,6 @@ rosservice
 rosnode
 rosparam
 rosmsg
-rossrv
 
 rosrun 功能包名 **可执行文件名**
 
@@ -68,7 +67,12 @@ rostopic
 rosmsg
 * show
 
+rossrv
+
+- show 同rosmsg show ，能够显示具体service的定义
+
 rosservice
+
 * list
 * call /具体service
 
@@ -652,6 +656,7 @@ int main(int argc,char** argv)
       n.advertiseService("/show_person",personCallback);
 
   ROS_INFO("ready to show person information.");
+  //ros::spin();使得程序阻塞，接受一次request便执行一次，无req就一直等待
   ros::spin();
 
   return 0;
