@@ -360,10 +360,133 @@ add_dependencies(person_subscriber ${PROJECT_NAME}_generate_messages_cpp)
 ## 6.2 创建消息package
 
 1. 创建消息package
-``catkin_create_pkg ros_msgs``
+``catkin_create_pkg msg_pkg``
 
-2. 按照上述要求填写该package的CMAKE和package.xml
+```
+catkin_create_pkg mypkg :此情况下，功能包中无include/src文件夹 //my_msgs1
+catkin_create_pkg mypkg rospy :此情况下，功能包中无src文件夹  //my_msgs3
+catkin_create_pkg mypkg roscpp :此情况下，功能包中有include/src文件夹  //my_msgs2
+```
+![image1](pic/pic3.png)
+2. 进入 msg_pkg ，创建msg文件夹，创建gpsData.msg
+```
+float32 northVel
+float32 skyVel
+float32 eastVel
+float32 latitude
+float32 longtitude
+float32 height
+```
+
+
+3. 填写该package的CMAKE和package.xml
+
+CMakeLists:
+
+```
+cmake_minimum_required(VERSION 3.0.2)
+project(my_msgs4)
+
+find_package(catkin REQUIRED COMPONENTS
+  message_generation
+  std_msgs 
+)
+
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  gpsData.msg
+ )
+
+
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  std_msgs  #Person.msg中的string与uint8在此文件定义
+ )
+
+catkin_package(
+CATKIN_DEPENDS  message_runtime #message_generation
+#  DEPENDS system_lib
+)
+
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+)
+```
+
+package.xml
+
+```
+<?xml version="1.0"?>
+<package format="2">
+  <name>my_msgs4</name>
+  <version>0.0.0</version>
+  <description>The my_msgs4 package</description>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
+  <!-- Example:  -->
+  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
+  <maintainer email="casicapollo@todo.todo">casicapollo</maintainer>
+
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+
+  <!-- Url tags are optional, but multiple are allowed, one per tag -->
+  <!-- Optional attribute type can be: website, bugtracker, or repository -->
+  <!-- Example: -->
+  <!-- <url type="website">http://wiki.ros.org/my_msgs4</url> -->
+
+
+  <!-- Author tags are optional, multiple are allowed, one per tag -->
+  <!-- Authors do not have to be maintainers, but could be -->
+  <!-- Example: -->
+  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+
+
+  <!-- The *depend tags are used to specify dependencies -->
+  <!-- Dependencies can be catkin packages or system dependencies -->
+  <!-- Examples: -->
+  <!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
+  <!--   <depend>roscpp</depend> -->
+  <!--   Note that this is equivalent to the following: -->
+  <!--   <build_depend>roscpp</build_depend> -->
+  <!--   <exec_depend>roscpp</exec_depend> -->
+  <!-- Use build_depend for packages you need at compile time: -->
+  <!--   <build_depend>message_generation</build_depend> -->
+  <!-- Use build_export_depend for packages you need in order to build against this package: -->
+  <!--   <build_export_depend>message_generation</build_export_depend> -->
+  <!-- Use buildtool_depend for build tool packages: -->
+  <!--   <buildtool_depend>catkin</buildtool_depend> -->
+  <!-- Use exec_depend for packages you need at runtime: -->
+  <!--   <exec_depend>message_runtime</exec_depend> -->
+  <!-- Use test_depend for packages you need only for testing: -->
+  <!--   <test_depend>gtest</test_depend> -->
+  <!-- Use doc_depend for packages you need only for building documentation: -->
+  <!--   <doc_depend>doxygen</doc_depend> -->
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
+```
+
+
+
 3. 填写要引用该消息的package的CMAKE和package.xml
+
+
 CMakeLists.txt
 ```
 find_package(catkin REQUIRED COMPONENTS
@@ -373,12 +496,13 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
    CATKIN_DEPENDS
-   ros_msgs
+   message_runtime ros_msgs
 )
 ```
 package.xml
 ```
   <depend>ros_msgs</depend>
+  <exec_depend>message_runtime</exec_depend>
 ```
 
 
