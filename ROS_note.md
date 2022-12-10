@@ -1212,6 +1212,14 @@ catkin_create_pkg learning_launch
 ```
 
 运行
+
+！！！！！！！！！！运行时脚本名字一定一定要是 xxx.launch
+
+否则如下报错：
+
+![image1](pic/pic4.png)
+
+
 ```
 catkin_make
 roslaunch learning_launch simple.launch
