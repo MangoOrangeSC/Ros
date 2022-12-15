@@ -168,6 +168,9 @@ include_directories(
 add_executable(velocity_publisher1 src/velocity_publisher.cpp)
 target_link_libraries(velocity_publisher1  ${catkin_LIBRARIES})
 
+add_executable(velocity_publisher2 src/velocity_publisher2.cpp)
+target_link_libraries(velocity_publisher2  ${catkin_LIBRARIES})
+
 add_executable(pose_subscriber src/pose_subscriber.cpp)
 target_link_libraries(pose_subscriber  ${catkin_LIBRARIES})
 

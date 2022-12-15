@@ -54,27 +54,82 @@ rosrun 功能包名 **可执行文件名**
 
 rqt_graph---
 
-rosnode
-* list
-* info
+**rosnode命令的详细作用列表如下**：
+
+|       rosnode命令        |                 作用                 |
+| :----------------------: | :----------------------------------: |
+|      `rosnode list`      |        列出当前运行的node信息        |
+| `rosnode info node_name` |         显示出node的详细信息         |
+| `rosnode kill node_name` |             结束某个node             |
+|      `rosnode ping`      |             测试连接节点             |
+|    `rosnode machine`     | 列出在特定机器或列表机器上运行的节点 |
+|    `rosnode cleanup`     |      清除不可到达节点的注册信息      |
 
 rostopic
+
 * list
 * pub -r 10（频率）  /话题名 /消息数据 /具体数据
 * info  可以看出发布者与接收者！！！！！！！！！！
 * echo 可以看出该topic上的数据
 
+在实际应用中，我们应该熟悉topic的几种使用命令，下表详细的列出了各自的命令及其作用。
+
+|             命令              |           作用           |
+| :---------------------------: | :----------------------: |
+|        `rostopic list`        |   列出当前所有的topic    |
+|  `rostopic info topic_name`   | 显示某个topic的属性信息  |
+|  `rostopic echo topic_name`   |   显示某个topic的内容    |
+| `rostopic pub topic_name ...` |   向某个topic发布内容    |
+|   `rostopic bw topic_name`    |   查看某个topic的带宽    |
+|   `rostopic hz topic_name`    |   查看某个topic的频率    |
+|  `rostopic find topic_type`   |   查找某个类型的topic    |
+|  `rostopic type topic_name`   | 查看某个topic的类型(msg) |
+
+如果你一时忘记了命令的写法，可以通过`rostopic help`或`rostopic command -h`查看具体用法。
+
 rosmsg
+
 * show
+
+rosmsg的命令相比topic就比较少了，只有两个如下：
+
+|       rosmsg命令       |        作用         |
+| :--------------------: | :-----------------: |
+|     `rosmsg list`      | 列出系统上所有的msg |
+| `rosmsg show msg_name` |  显示某个msg的内容  |
 
 rossrv
 
 - show 同rosmsg show ，能够显示具体service的定义
 
+具体的操作指令如下表：
+
+|    rossrv 命令    |      作用      |
+| :---------------: | :------------: |
+|   `rossrv show`   |  显示服务描述  |
+|   `rossrv list`   |  列出所有服务  |
+|   `rossrv md5`    | 显示服务md5sum |
+| `rossrv package`  | 列出包中的服务 |
+| `rossrv packages` |                |
+
 rosservice
 
 * list
 * call /具体service
+
+在实际应用中，service通信方式的命令时`rosservice`，具体的命令参数如下表：
+
+|  rosservice 命令  |           作用           |
+| :---------------: | :----------------------: |
+| `rosservice list` |       显示服务列表       |
+| `rosservice info` |       打印服务信息       |
+| `rosservice type` |       打印服务类型       |
+| `rosservice uri`  |    打印服务ROSRPC uri    |
+| `rosservice find` |    按服务类型查找服务    |
+| `rosservice call` | 使用所提供的args调用服务 |
+| `rosservice args` |       打印服务参数       |
+
+## 
 
 话题记录
 rosbag record -a -O cmd_record //记录
@@ -167,7 +222,7 @@ int main(int argc, char **argv)
   ros::Publisher turtle_vel_pub=
       n.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel",10);
 
-  //设置循环的频率
+  //设置循环的频率，10HZ
   ros::Rate loop_rate(10);
 
   int count=0;
@@ -1187,7 +1242,21 @@ launch文件：通过***XML***文件实现多节点的配置和启动（可自�
     <include file="$(dirname)/other.launch"/>
       * file：包含的其他launch文件路径
 
+遵循着xml格式规范，是一种标签文本，它的格式包括以下标签：
 
+```xml
+<launch>    <!--根标签-->
+<node>    <!--需要启动的node及其参数-->
+<include>    <!--包含其他launch-->
+<machine>    <!--指定运行的机器-->
+<env-loader>    <!--设置环境变量-->
+<param>    <!--定义参数到参数服务器-->
+<rosparam>    <!--启动yaml文件参数到参数服务器-->
+<arg>    <!--定义变量-->
+<remap>    <!--设定参数映射-->
+<group>    <!--设定命名空间-->
+</launch>    <!--根标签-->
+```
 
 ## 3. 编程实例
 
@@ -1322,22 +1391,61 @@ roslaunch gazebo_ros
 
 # 15 ros::spin()和ros::spinOnce()
 
+https://www.cnblogs.com/liu-fa/p/5925381.html
+
+https://blog.csdn.net/weixin_40215443/article/details/103793316
+
+https://blog.csdn.net/qq_42731705/article/details/123967580
+
+https://sychaichangkun.gitbooks.io/ros-tutorial-icourse163/content/chapter6/6.3.html
+
+消息发布器一直循环发送msg到topic chatter上；消息订阅器一旦发现 chatter上有data，就会把msg放到一个队列回调函数中，但还未执行callback函数。
+
+千万不要认为，只要指定了回调函数，系统就回去自动触发，你必须`ros::spin()`或者`ros::spinOnce()`才能真正使回调函数生效。
+
+当运行ros::spin()和ros::spinOnce()时，就会执行callback函数。区别就是执行的不同。
 
 
 ros::spinOnce()与ros::spin()：
 ROS消息回调处理函数。它俩通常会出现在ROS的主循环中，程序需要不断调用ros::spin() 或 ros::spinOnce()，两者区别在于前者调用后不会再返回，也就是你的主程序到这儿就不往下执行了，而后者在调用后还可以继续执行之后的程序。
 
+## 回调函数与spin
 
+回调函数在编程中是一种重要的方法，在维基百科上的解释是：
+
+```
+In computer programming, a callback is any executable code that is passed as an argument to other code, which is expected to call back (execute) the argument at a given time.
+```
+
+回调函数作为参数被传入到了另一个函数中（在本例中传递的是函数指针），在未来某个时刻（当有新的message到达），就会立即执行。Subscriber接收到消息，实际上是先把消息放到一个**队列**中去，如图所示。队列的长度在Subscriber构建的时候设置好了。当有spin函数执行，就会去处理消息队列中队首的消息。
+
+![image1](pic/pic5.png)
+
+
+spin具体处理的方法又可分为阻塞/非阻塞,单线程/多线程，在ROS函数接口层面我们有4种spin的方式：
+
+|            spin方法             |  阻塞  |  线程  |
+| :-----------------------------: | :----: | :----: |
+|          `ros::spin()`          |  阻塞  | 单线程 |
+|        `ros::spinOnce()`        | 非阻塞 | 单线程 |
+|   `ros::MultiThreadedSpin()`    |  阻塞  | 多线程 |
+| `ros::AsyncMultiThreadedSpin()` | 非阻塞 | 多线程 |
+
+阻塞与非阻塞的区别我们已经讲了，下面来看看单线程与多线程的区别：
+
+![image1](pic/pic6.png)
+
+我们常用的`spin()`、`spinOnce()`是单个线程逐个处理回调队列里的数据。有些场合需要用到多线程分别处理，则可以用到`MultiThreadedSpin()`、`AsyncMultiThreadedSpin()`。
 
 ## ros::spin()
 
 这句话的意思是循环且[监听](https://so.csdn.net/so/search?q=监听&spm=1001.2101.3001.7020)反馈函数（callback）。循环就是指程序运行到这里，就会一直在这里循环了。监听反馈函数的意思是，如果这个节点有callback函数，那写一句ros::spin()在这里，就可以在有对应消息到来的时候，运行callback函数里面的内容。 
-就目前而言，以我愚见，我觉得写这句话适用于写在程序的末尾（因为写在这句话后面的代码不会被执行），适用于订阅节点，且订阅速度没有限制的情况。
+就目前而言，写这句话适用于写在程序的末尾（因为写在这句话后面的代码不会被执行），适用于订阅节点，且订阅速度没有限制的情况。
 
 ## ros::spinOnce()
 
-这句话的意思是监听反馈函数（callback）。只能监听反馈，不能循环。所以当你需要监听一下的时候，就调用一下这个函数。 
-这个函数比较灵活，尤其是我想控制接收速度的时候。配合ros::ok()效果极佳。 
+这句话的意思是监听反馈函数（callback）。只能监听反馈，不能循环。所以当需要监听一下的时候，就调用一下这个函数。 
+这个函数比较灵活，尤其是想控制接收速度的时候。配合ros::ok()效果极佳。 
 
 下面的例子，控制10HZ，运行callback函数
 
@@ -1365,11 +1473,13 @@ while(ros::ok())
 
 
 
-例子
+## 例子
+
+#### 监听
 
 > spin.cc
 
-```
+```c++
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Twist.h>
@@ -1421,7 +1531,7 @@ publish velocity command
 
 > spin1.cc
 
-```
+```c++
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Twist.h>
@@ -1446,14 +1556,8 @@ int main(int argc, char **argv)
 
     ros::Subscriber sub=n.subscribe("/turtle1/cmd_vel",1000,chatterCallback);
 
-
-
     print();
-
-    ros::spin();
-
-
-    
+    ros::spin();   
     return 0;
 }
 ```
@@ -1468,6 +1572,247 @@ publish velocity command
 publish velocity command
 .....
 ```
+
+
+
+#### 接收
+
+velocity_publisher.cpp
+
+```
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+
+int main(int argc, char **argv)
+{
+
+  ros::init(argc,argv,"velocity_publisher");
+
+  ros::NodeHandle n;
+
+  ros::Publisher turtle_vel_pub=
+      n.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel",1000);
+
+  // 频率10HZ
+  ros::Rate loop_rate(10);
+
+  int count=0;
+  while(ros::ok())
+  {
+    geometry_msgs::Twist vel_msg;
+    vel_msg.linear.x=0.5;
+    vel_msg.angular.z=0.2;
+
+    // 发送频率10HZ，消息池最大容量1000
+    turtle_vel_pub.publish(vel_msg);
+    ROS_INFO("publish velocity command [%0.2f m/s, %0.2f rad/s]",
+             vel_msg.linear.x,vel_msg.angular.z);
+
+    loop_rate.sleep();
+  }
+}
+
+```
+
+#### 结果
+
+##### spinonce
+
+1 先运行spin
+
+不运行publisher
+
+**可以看出spinonce是非阻塞的**
+
+```
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+```
+
+![image1](pic/pic7.png)
+
+
+
+
+
+2.先运行运行publisher
+
+```
+in function
+in function
+in function
+in function
+[ INFO] [1671069165.615748715]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069165.616567620]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671069165.715799414]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069165.715911491]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671069165.815714292]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069165.815748272]: publish velocity command [0.50 m/s, 0.20 rad/s]
+```
+
+
+
+##### spin
+
+1 先运行spin1
+
+```
+casicapollo@casicapollo-System-Product-Name:~/Documents/GitHub/Ros/catkin_ws$ rosrun test_spin spin1
+in function
+```
+
+2 先运行publisher
+
+```
+casicapollo@casicapollo-System-Product-Name:~/Documents/GitHub/Ros/catkin_ws$ rosrun test_spin spin1
+in function
+[ INFO] [1671069326.277222290]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.327126433]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.377098392]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.426966746]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.477072074]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.526997292]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.576849414]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.626912483]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.676954084]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.727005629]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.776822177]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.826855551]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.876827837]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.927068269]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069326.977086539]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069327.026819301]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069327.076849711]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671069327.126879897]: publish velocity command [0.50 m/s, 0.20 rad/s]
+```
+
+#### 频率相关
+
+spinonce为例
+
+发布10HZ，接受20HZ
+
+```
+in function
+in function
+in function
+in function
+in function
+in function
+in function
+[ INFO] [1671068740.005284026]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+[ INFO] [1671068740.105188962]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+[ INFO] [1671068740.205155001]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+[ INFO] [1671068740.305184237]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+[ INFO] [1671068740.405229398]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+[ INFO] [1671068740.505208425]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+[ INFO] [1671068740.605182551]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+[ INFO] [1671068740.705231313]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+in function
+
+```
+
+发布10HZ，接受10HZ
+
+```
+in function
+in function
+in function
+in function
+[ INFO] [1671068827.155286886]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068827.255155630]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068827.355175942]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068827.455221893]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068827.555163933]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068827.655146359]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068827.755228417]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068827.855103903]: publish velocity command [0.50 m/s, 0.20 rad/s]
+```
+
+发布20HZ，接受10HZ
+
+```
+in function
+in function
+in function
+in function
+[ INFO] [1671068881.185038262]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.187730290]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.284889883]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.285027096]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.384844837]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.384911883]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.484888122]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.485025124]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.584879472]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.585007132]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.684888009]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.684975627]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.784778712]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.784808160]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.884816355]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.884846756]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068881.984796946]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068881.984834447]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068882.084866363]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068882.084970939]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068882.184839839]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068882.184862745]: publish velocity command [0.50 m/s, 0.20 rad/s]
+in function
+[ INFO] [1671068882.284868140]: publish velocity command [0.50 m/s, 0.20 rad/s]
+[ INFO] [1671068882.284957618]: publish velocity command [0.50 m/s, 0.20 rad/s]
+```
+
 
 
 

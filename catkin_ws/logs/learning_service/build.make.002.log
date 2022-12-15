@@ -1,0 +1,17 @@
+[  0%] Built target std_msgs_generate_messages_nodejs
+[  0%] Built target std_msgs_generate_messages_cpp
+[  0%] Built target std_msgs_generate_messages_py
+[ 13%] Built target turtle_spawn
+[ 26%] Built target turtle_command_server
+[ 26%] Built target std_msgs_generate_messages_lisp
+[ 26%] Built target std_msgs_generate_messages_eus
+[ 26%] Built target _learning_service_generate_messages_check_deps_Person
+[ 53%] Built target learning_service_generate_messages_py
+[ 53%] Built target learning_service_generate_messages_eus
+[ 60%] Built target learning_service_generate_messages_cpp
+[ 66%] Built target learning_service_generate_messages_lisp
+[ 73%] Built target learning_service_generate_messages_nodejs
+[ 73%] Built target learning_service_gencpp
+[ 73%] Built target learning_service_generate_messages
+[ 86%] Built target person_client
+[100%] Built target person_server

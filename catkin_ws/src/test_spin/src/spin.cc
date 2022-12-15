@@ -19,14 +19,11 @@ int main(int argc, char **argv)
 {
     ros::init(argc,argv,"listener");
     ros::NodeHandle n;
-
     ros::Subscriber sub=n.subscribe("/turtle1/cmd_vel",1000,chatterCallback);
-
     ros::Rate loop_rate(10);
     while (ros::ok())
     {
         print();
-
         ros::spinOnce();
         loop_rate.sleep();
     }

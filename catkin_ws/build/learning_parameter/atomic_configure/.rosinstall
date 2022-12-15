@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/casicapollo/Documents/GitHub/Ros/catkin_ws/devel/setup.sh

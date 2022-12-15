@@ -1,0 +1,20 @@
+[  0%] Built target std_msgs_generate_messages_py
+[  0%] Built target std_msgs_generate_messages_lisp
+[  0%] Built target std_msgs_generate_messages_cpp
+[ 11%] Built target velocity_publisher2
+[ 23%] Built target pose_subscriber
+[35m[1mScanning dependencies of target velocity_publisher1[0m
+[ 23%] Built target std_msgs_generate_messages_eus
+[ 23%] Built target std_msgs_generate_messages_nodejs
+[ 29%] [32mBuilding CXX object CMakeFiles/velocity_publisher1.dir/src/velocity_publisher.cpp.o[0m
+[ 29%] Built target _learning_topic_generate_messages_check_deps_Person
+[ 47%] Built target learning_topic_generate_messages_cpp
+[ 47%] Built target learning_topic_generate_messages_eus
+[ 58%] Built target learning_topic_generate_messages_py
+[ 64%] Built target learning_topic_generate_messages_lisp
+[ 70%] Built target learning_topic_generate_messages_nodejs
+[ 82%] Built target person_subscriber
+[ 82%] Built target learning_topic_generate_messages
+[ 94%] Built target person_publisher
+[100%] [32m[1mLinking CXX executable /home/casicapollo/Documents/GitHub/Ros/catkin_ws/devel/lib/learning_topic/velocity_publisher1[0m
+[100%] Built target velocity_publisher1
