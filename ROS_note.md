@@ -50,9 +50,27 @@ rosnode
 rosparam
 rosmsg
 
+rqt_graph---
+
+
+
+
+
 rosrun 功能包名 **可执行文件名**
 
-rqt_graph---
+**rosrun命令的详细用法如下**：
+
+```
+$ rosrun [--prefix cmd] [--debug] pkg_name node_name [ARGS]
+```
+
+rosrun将会寻找PACKAGE下的名为EXECUTABLE的可执行程序，将可选参数ARGS传入。 例如在GDB下运行ros程序：
+
+```
+$ rosrun --prefix 'gdb -ex run --args' pkg_name node_name
+```
+
+
 
 **rosnode命令的详细作用列表如下**：
 
@@ -129,11 +147,23 @@ rosservice
 | `rosservice call` | 使用所提供的args调用服务 |
 | `rosservice args` |       打印服务参数       |
 
-## 
-
 话题记录
 rosbag record -a -O cmd_record //记录
 rosbag play cmd_record.bag //播放
+
+rosbag对软件包来操作，一个包是ROS用于存储ROS消息数据的文件格式，rosbag命令可以记录、回放和操作包。指令列表如下：
+
+|     命令     |                          作用                          |
+| :----------: | :----------------------------------------------------: |
+|   `cheak`    | 确定一个包是否可以在当前系统中进行，或者是否可以迁移。 |
+| `decompress` |                 压缩一个或多个包文件。                 |
+|   `filter`   |                 解压一个或多个包文件。                 |
+|    `fix`     |       在包文件中修复消息，以便在当前系统中播放。       |
+|    `help`    |                获取相关命令指示帮助信息                |
+|    `info`    |              总结一个或多个包文件的内容。              |
+|    `play`    |    以一种时间同步的方式回放一个或多个包文件的内容。    |
+|   `record`   |            用指定主题的内容记录一个包文件。            |
+|  `reindex`   |               重新索引一个或多个包文件。               |
 
 # 3.创建工作空间与功能包
 
@@ -1404,7 +1434,6 @@ https://sychaichangkun.gitbooks.io/ros-tutorial-icourse163/content/chapter6/6.3.
 千万不要认为，只要指定了回调函数，系统就回去自动触发，你必须`ros::spin()`或者`ros::spinOnce()`才能真正使回调函数生效。
 
 当运行ros::spin()和ros::spinOnce()时，就会执行callback函数。区别就是执行的不同。
-
 
 ros::spinOnce()与ros::spin()：
 ROS消息回调处理函数。它俩通常会出现在ROS的主循环中，程序需要不断调用ros::spin() 或 ros::spinOnce()，两者区别在于前者调用后不会再返回，也就是你的主程序到这儿就不往下执行了，而后者在调用后还可以继续执行之后的程序。

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  #std_srvs
   turtlesim
 
   message_generation
@@ -157,6 +158,8 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+add_executable(spin_command_client src/spin_command_client.cpp)
+target_link_libraries(spin_command_client  ${catkin_LIBRARIES})
 
 add_executable(turtle_spawn src/turtle_spawn.cpp)
 target_link_libraries(turtle_spawn  ${catkin_LIBRARIES})
