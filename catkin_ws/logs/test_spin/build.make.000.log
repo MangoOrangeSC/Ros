@@ -1,8 +1,0 @@
-[35m[1mScanning dependencies of target spin[0m
-[35m[1mScanning dependencies of target spin1[0m
-[ 25%] [32mBuilding CXX object CMakeFiles/spin1.dir/src/spin1.cc.o[0m
-[ 50%] [32mBuilding CXX object CMakeFiles/spin.dir/src/spin.cc.o[0m
-[ 75%] [32m[1mLinking CXX executable /home/casicapollo/Documents/GitHub/Ros/catkin_ws/devel/lib/test_spin/spin1[0m
-[ 75%] Built target spin1
-[100%] [32m[1mLinking CXX executable /home/casicapollo/Documents/GitHub/Ros/catkin_ws/devel/lib/test_spin/spin[0m
-[100%] Built target spin

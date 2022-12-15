@@ -1,4 +1,0 @@
-[35m[1mScanning dependencies of target basic_shapes[0m
-[ 50%] [32mBuilding CXX object CMakeFiles/basic_shapes.dir/src/basic_shapes.cc.o[0m
-[100%] [32m[1mLinking CXX executable /home/casicapollo/Documents/GitHub/Ros/catkin_ws/devel/lib/using_markers/basic_shapes[0m
-[100%] Built target basic_shapes

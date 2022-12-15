@@ -1,8 +1,0 @@
-[35m[1mScanning dependencies of target turtle_tf_listener[0m
-[ 25%] [32mBuilding CXX object CMakeFiles/turtle_tf_listener.dir/src/turtle_tf_listener.cpp.o[0m
-[35m[1mScanning dependencies of target turtle_tf_broadcaster[0m
-[ 50%] [32mBuilding CXX object CMakeFiles/turtle_tf_broadcaster.dir/src/turtle_tf_broadcaster.cpp.o[0m
-[ 75%] [32m[1mLinking CXX executable /home/casicapollo/Documents/GitHub/Ros/catkin_ws/devel/lib/learning_tf/turtle_tf_listener[0m
-[ 75%] Built target turtle_tf_listener
-[100%] [32m[1mLinking CXX executable /home/casicapollo/Documents/GitHub/Ros/catkin_ws/devel/lib/learning_tf/turtle_tf_broadcaster[0m
-[100%] Built target turtle_tf_broadcaster
